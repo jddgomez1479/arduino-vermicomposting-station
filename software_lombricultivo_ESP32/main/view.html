@@ -1,0 +1,218 @@
+<html>
+
+<head>
+    <title>ESP32 Web Server</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <meta http-equiv=refresh content="10; url=http://192.168.1.121" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,"> 
+
+    <style>
+        html {
+            font-family: Helvetica;
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        body {
+            background-color: #4499f9;
+        }
+
+        h1 {
+            color: #0F3376;
+            padding: 2vh;
+        }
+
+        p {
+            font-size: 19px;
+        }
+
+        h {
+            padding: 10px;
+        }
+
+        tbody {
+            padding: 10px;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            vertical-align: text-top;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            font-size: 20px;
+            vertical-align: text-top;
+            text-align: left;
+        }
+
+        .Button {
+            
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;          
+            font-weight: bold;
+            font-style: italic;
+            vertical-align: middle;
+            padding: 17px 19px;
+            text-decoration: none;
+            font-size: 15px;
+            font-family: Arial;
+            width: 90px;
+            height: 45px;
+            border-width: 1px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .ButtonR {   
+            border-color: #d02718; 
+            box-shadow: 3px 4px 0px 0px #8a2a21;
+            text-shadow: 0px 1px 0px #810e05;
+            background: linear-gradient(#c62d1f, #f24437);
+        }
+
+        .ButtonR:hover {
+            background: linear-gradient(#f24437, #c62d1f);
+        }
+
+        .Button:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .ButtonB {
+            border-color: #3f0b92; 
+            box-shadow: 3px 4px 0px 0px #3f0b92;
+            text-shadow: 0px 1px 0px #0718aa;
+            background: linear-gradient(#3f0b92, #3f0b92);
+        }
+
+        .ButtonG:hover {
+            background: linear-gradient(#3df237, #3bc61f);
+        }
+
+        .ButtonB {
+            border-color: #1849d0; 
+            box-shadow: 3px 4px 0px 0px #214b8a;
+            text-shadow: 0px 1px 0px #053b81;
+            background: linear-gradient(#1f67c6, #378ef2);
+        }
+
+        .ButtonB:hover {
+            background: linear-gradient(#3788f2, #1f54c6);
+        }
+    </style>
+</head>
+<!--onload="Graficos()"-->
+<body onload="ejemplo()">
+ 
+    <h1>ESP32 Web Server</h1>
+    <p>Prototipo lombricultivo v1</p>
+
+    <table>
+        <tbody>
+            <tr>
+                <td style="background-color: rgba(255, 255, 255, 0.639);" WIDTH="500" HEIGHT="400" >
+                        <p><span id="input1">%s</span></p>                        
+                </td> 
+            </tr>
+            <tr>
+                <td>    
+                    <div id="envioDatos">
+                        <form name="formulario" method="get">
+                            <p><input type="submit" class="ButtonB Button">&nbsp;&nbsp;&nbsp;<input type="text" id="TxtSerial" name="textBoxSerial" required minlength="3" maxlength="20" size="32" style="font-size: 19px;"></p>
+                            <p><button class="ButtonR Button" onclick="mostrarGrafico()">Grafico</button></p>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <br>
+                    <br>
+                    <h1>datos obtenidos</h1>
+                    <br>
+                    <br>
+                    <br>
+                    <div id="t1">1</div>
+                    <div id="t2">2</div>
+                    <div id="t3">3</div>
+                    <div id="t4">4</div>
+                    <div id="t5">5</div>
+                    <div id="t6">6</div>
+                    <div id="t7">7</div>
+                    <div id="t8">8</div>
+                    <div id="t9">9</div>
+                    <div id="t10">10</div>
+                    <br>
+                    <br>
+                    <br>
+
+                    <div id="d1">%s</div>
+                    <div id="d2">%s</div>
+                    <div id="d3">%s</div>
+                    <div id="d4">%s</div>
+                    <div id="d5">%s</div>
+                    <div id="d6">%s</div>
+                    <div id="d7">%s</div>
+                    <div id="d8">%s</div>
+                    <div id="d9">%s</div>
+                    <div id="d10">%s</div>
+                    <br>
+                    <br>
+                    <div id="grafico"></div>
+                    <script>
+
+                        
+                        function ejemplo(){
+                            var ejeX = []; 
+                            var ejeY = []; 
+
+                            ejeY.push(parseFloat(document.getElementById("d1").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d2").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d3").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d4").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d5").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d6").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d7").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d8").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d9").textContent));
+                            ejeY.push(parseFloat(document.getElementById("d10").textContent));
+
+                            ejeX.push(parseFloat(document.getElementById("t1").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t2").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t3").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t4").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t5").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t6").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t7").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t8").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t9").textContent));
+                            ejeX.push(parseFloat(document.getElementById("t10").textContent));
+
+
+                            var data = [{
+                                x: ejeX,
+                                y: ejeY,
+                                type: "linear"
+                            }];
+                            Plotly.newPlot("grafico",data);
+                        }
+                    </script> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
